@@ -11,7 +11,8 @@ import (
 
 var nacosClient *naming_client.INamingClient
 
-func GetClient(opts *options.NacosOptions) (*naming_client.INamingClient, error) {
+// GetNamingClient Get Nacos naming client
+func GetNamingClient(opts *options.NacosOptions) (*naming_client.INamingClient, error) {
 	if nacosClient == nil {
 		if opts == nil {
 			var err error
@@ -54,10 +55,11 @@ func GetClient(opts *options.NacosOptions) (*naming_client.INamingClient, error)
 	return nacosClient, nil
 }
 
+// RegisterServiceInstance Register a service instance
 func RegisterServiceInstance(client *naming_client.INamingClient, opts *options.RegisterServiceOptions) error {
 	var err error
 	if client == nil {
-		client, err = GetClient(nil)
+		client, err = GetNamingClient(nil)
 		if err != nil {
 			return err
 		}
@@ -68,10 +70,11 @@ func RegisterServiceInstance(client *naming_client.INamingClient, opts *options.
 	return err
 }
 
+// DeregisterServiceInstance Deregister a specified service instance
 func DeregisterServiceInstance(client *naming_client.INamingClient, opts *options.DeregisterServiceOptions) error {
 	var err error
 	if client == nil {
-		client, err = GetClient(nil)
+		client, err = GetNamingClient(nil)
 		if err != nil {
 			return err
 		}
@@ -82,10 +85,11 @@ func DeregisterServiceInstance(client *naming_client.INamingClient, opts *option
 	return err
 }
 
+// SelectServiceInstance Select an available service instance
 func SelectServiceInstance(client *naming_client.INamingClient, opts *options.SelectServiceInstanceOptions) (*model.Instance, error) {
 	var err error
 	if client == nil {
-		client, err = GetClient(nil)
+		client, err = GetNamingClient(nil)
 		if err != nil {
 			return nil, err
 		}

@@ -2,10 +2,11 @@ package options
 
 import "github.com/nacos-group/nacos-sdk-go/vo"
 
+// SelectServiceInstanceOptions The options for select the service instance
 type SelectServiceInstanceOptions struct {
-	Clusters    []string
-	ServiceName string
-	GroupName   string
+	Clusters    []string // The cluster name of the service instances
+	ServiceName string   // The name of the service
+	GroupName   string   // The group name of the service instances
 }
 
 func (ssio *SelectServiceInstanceOptions) SelectOneHealthInstanceParam() vo.SelectOneHealthInstanceParam {
