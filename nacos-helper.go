@@ -6,7 +6,7 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/model"
 	"github.com/nacos-group/nacos-sdk-go/vo"
-	"nacos_helper/options"
+	"github.com/zhangsq-ax/nacos-helper-go/options"
 )
 
 var nacosClient *naming_client.INamingClient
