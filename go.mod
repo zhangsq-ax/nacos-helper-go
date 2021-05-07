@@ -1,4 +1,4 @@
-module nacos_helper
+module github.com/zhangsq-ax/nacos-helper-go
 
 go 1.16
 
