@@ -97,3 +97,25 @@ func SelectServiceInstance(client *naming_client.INamingClient, opts *options.Se
 
 	return (*client).SelectOneHealthyInstance(opts.SelectOneHealthInstanceParam())
 }
+
+// SubscribeServiceInstance Subscribe services change and select an available service instance
+func SubscribeServiceInstance(client *naming_client.INamingClient, opts *options.SubscribeServiceInstanceOptions) error {
+	var err error
+	if client == nil {
+		client, err = GetNamingClient(nil)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = (*client).Subscribe(opts.GetSubscribeParam(func(services []model.SubscribeService, err error) {
+		if err != nil {
+			opts.SubscribeCallback(nil, err)
+		}
+		var instance *model.Instance
+		instance, err = SelectServiceInstance(client, opts.GetSelectServiceInstanceOptions())
+		opts.SubscribeCallback(instance, err)
+	}))
+
+	return err
+}
