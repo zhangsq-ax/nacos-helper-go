@@ -73,3 +73,34 @@ func main() {
 	...
 }
 ```
+
+### Subscribe service
+
+When the registered services have changes, an available service instance is automatically selected
+
+```go
+package main
+
+import (
+	nacos_helper "github.com/zhangsq-ax/nacos-helper-go"
+	"log"
+	"fmt"
+)
+
+func main() {
+	err := nacos_helper.SubscribeServiceInstance(nil, &nacos_helper.options.SubscribeServiceInstanceOptions{
+		ServiceName: "foo",
+		SubscribeCallback: func(instance *model.Instance, err error) {
+			if err != nil { 
+				// Handling error
+			} else {
+				fmt.Println(instance.Ip, instance.Port)
+				// Handle instance changes 
+			}
+		},
+	})
+	if err != nil {
+		log.Error(err)
+	}
+}
+```
