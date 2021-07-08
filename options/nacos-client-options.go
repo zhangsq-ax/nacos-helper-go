@@ -3,6 +3,8 @@ package options
 import (
 	"errors"
 	"fmt"
+	"github.com/nacos-group/nacos-sdk-go/common/constant"
+	"github.com/nacos-group/nacos-sdk-go/vo"
 	"os"
 	"strconv"
 )
@@ -62,4 +64,29 @@ func GetNacosOptionsByEnv() (*NacosOptions, error) {
 			Password:    getEnvString("NACOS_PASSWORD"),
 		},
 	}, nil
+}
+
+func (no *NacosOptions) GetNacosClientParam() *vo.NacosClientParam {
+	serverConfig := []constant.ServerConfig{
+		{
+			Scheme:      no.Server.Scheme,
+			IpAddr:      no.Server.IpAddr,
+			Port:        no.Server.Port,
+			ContextPath: no.Server.ContextPath,
+		},
+	}
+
+	clientConfig := constant.ClientConfig{
+		NamespaceId:         no.Client.NamespaceId,
+		NotLoadCacheAtStart: true,
+		LogLevel:            "debug",
+		Username:            no.Client.Username,
+		Password:            no.Client.Password,
+		AppName:             no.Client.AppName,
+	}
+
+	return &vo.NacosClientParam{
+		ServerConfigs: serverConfig,
+		ClientConfig:  &clientConfig,
+	}
 }
