@@ -2,18 +2,18 @@ package nacos_helper
 
 import (
 	"github.com/nacos-group/nacos-sdk-go/clients"
+	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
-	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/model"
-	"github.com/nacos-group/nacos-sdk-go/vo"
 	"github.com/zhangsq-ax/nacos-helper-go/options"
 )
 
-var nacosClient *naming_client.INamingClient
+var namingClient *naming_client.INamingClient
+var configClient *config_client.IConfigClient
 
-// GetNamingClient Get Nacos naming client
-func GetNamingClient(opts *options.NacosOptions) (*naming_client.INamingClient, error) {
-	if nacosClient == nil {
+// GetConfigClient Get Nacos config client
+func GetConfigClient(opts *options.NacosOptions) (*config_client.IConfigClient, error) {
+	if configClient == nil {
 		if opts == nil {
 			var err error
 			opts, err = options.GetNacosOptionsByEnv()
@@ -22,37 +22,37 @@ func GetNamingClient(opts *options.NacosOptions) (*naming_client.INamingClient, 
 			}
 		}
 
-		serverConfig := []constant.ServerConfig{
-			{
-				Scheme:      opts.Server.Scheme,
-				IpAddr:      opts.Server.IpAddr,
-				Port:        opts.Server.Port,
-				ContextPath: opts.Server.ContextPath,
-			},
-		}
-
-		clientConfig := constant.ClientConfig{
-			NamespaceId:         opts.Client.NamespaceId,
-			NotLoadCacheAtStart: true,
-			LogLevel:            "debug",
-			Username:            opts.Client.Username,
-			Password:            opts.Client.Password,
-			AppName:             opts.Client.AppName,
-		}
-
-		client, err := clients.NewNamingClient(vo.NacosClientParam{
-			ClientConfig:  &clientConfig,
-			ServerConfigs: serverConfig,
-		})
-
+		client, err := clients.NewConfigClient(*opts.GetNacosClientParam())
 		if err != nil {
 			return nil, err
 		}
 
-		nacosClient = &client
+		configClient = &client
 	}
 
-	return nacosClient, nil
+	return configClient, nil
+}
+
+// GetNamingClient Get Nacos naming client
+func GetNamingClient(opts *options.NacosOptions) (*naming_client.INamingClient, error) {
+	if namingClient == nil {
+		if opts == nil {
+			var err error
+			opts, err = options.GetNacosOptionsByEnv()
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		client, err := clients.NewNamingClient(*opts.GetNacosClientParam())
+		if err != nil {
+			return nil, err
+		}
+
+		namingClient = &client
+	}
+
+	return namingClient, nil
 }
 
 // RegisterServiceInstance Register a service instance
