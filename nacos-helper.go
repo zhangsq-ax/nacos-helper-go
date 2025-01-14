@@ -1,11 +1,13 @@
 package nacos_helper
 
 import (
+	"fmt"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/model"
 	"github.com/zhangsq-ax/nacos-helper-go/options"
+	"strings"
 )
 
 var namingClient *naming_client.INamingClient
@@ -44,6 +46,13 @@ func GetNamingClient(opts *options.NacosOptions) (*naming_client.INamingClient, 
 			}
 		}
 
+		fmt.Printf("===== Nacos Client Options =====\n")
+		fmt.Printf("Address: %s%s:%d%s\n", opts.Server.Scheme, opts.Server.IpAddr, opts.Server.Port, opts.Server.ContextPath)
+		fmt.Printf("NamespaceId: %s\n", opts.Client.NamespaceId)
+		fmt.Printf("AppName: %s\n", opts.Client.AppName)
+		fmt.Printf("Username: %s\n", opts.Client.Username)
+		fmt.Printf("Password: %s\n", strings.Repeat("*", len(opts.Client.Password)))
+		fmt.Println("===================================")
 		client, err := clients.NewNamingClient(*opts.GetNacosClientParam())
 		if err != nil {
 			return nil, err
