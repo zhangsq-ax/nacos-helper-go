@@ -117,7 +117,7 @@ func SubscribeServiceInstance(client *naming_client.INamingClient, opts *options
 		}
 	}
 
-	err = (*client).Subscribe(opts.GetSubscribeParam(func(services []model.SubscribeService, err error) {
+	return (*client).Subscribe(opts.GetSubscribeParam(func(services []model.SubscribeService, err error) {
 		if err != nil {
 			opts.SubscribeCallback(nil, err)
 		}
@@ -125,6 +125,16 @@ func SubscribeServiceInstance(client *naming_client.INamingClient, opts *options
 		instance, err = SelectServiceInstance(client, opts.GetSelectServiceInstanceOptions())
 		opts.SubscribeCallback(instance, err)
 	}))
+}
 
-	return err
+func SubscribeConfig(client *config_client.IConfigClient, opts *options.SubscribeConfigOptions) error {
+	var err error
+	if client == nil {
+		client, err = GetConfigClient(nil)
+		if err != nil {
+			return err
+		}
+	}
+
+	return (*client).ListenConfig(opts.GetConfigParam())
 }
